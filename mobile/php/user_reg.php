@@ -1,36 +1,33 @@
 <?php
 if (!isset($_POST)) {
-    $response = array('status'=> 'failed', 'data'=> null); 
-    sendJsonResponse($response); 
-    die();
+    echo "failed";
 }
 
 include_once("dbconnect.php");
-$name = addslashes($_POST['name']);
 $email = $_POST['email'];
 $password = sha1($_POST['password']);
-$phoneNo = addslashes($_POST['phoneNo']);
-$address = $_POST['address'];
-$base64image = $_POST['image'];
+$sqllogin = "SELECT * FROM tbl_user WHERE user_email = '$email' AND user_pass = '$password'";
+$result = $conn->query($sqllogin);
+$numrow = $result->num_rows;
 
-$sqlinsert = "INSERT INTO `tbl_user` (`user_name`, `user_email`, `user_pass`, `user_phoneNo`, `user_address`) 
-VALUES ('$name','$email', '$password', '$phoneNo', '$address')"; 
-if ($conn->query($sqlinsert) === TRUE) {
-    $response = array('status' => 'success', 'data' => null);
-    $filename = mysqli_insert_id($conn);
-    $decoded_string = base64_decode($base64image);
-    $path  = '../assets/user/' . $filename . '.jpg';
-    $is_written = file_put_contents($path, $decoded_string); 
+if ($numrow > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $user['id'] = $row['user_id'];
+        $user['name'] = $row['user_name'];
+        $user['email'] = $row['user_email'];
+        $user['phoneNo'] = $row['user_phoneNo'];
+        $user['address'] = $row['user_address'];
+    }
+    $response = array('status' => 'success', 'data' => $user);
     sendJsonResponse($response);
 } else {
-    $response =array('status'=> 'failed','data'=> null); 
+    $response = array('status' => 'failed', 'data' => null);
     sendJsonResponse($response);
 }
-
 
 function sendJsonResponse($sentArray)
 {
-    header('Content-Type:application/json'); 
+    header('Content-Type: application/json');
     echo json_encode($sentArray);
 }
-?>
+
