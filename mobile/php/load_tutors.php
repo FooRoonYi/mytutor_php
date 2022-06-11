@@ -12,7 +12,7 @@ $search = $_POST['search'];
 
 $page_first_result = ($pageno - 1) * $results_per_page;
 
-$sqltutor = "SELECT * FROM `tbl_tutors`";
+$sqltutor = "SELECT * FROM `tbl_tutors` WHERE tutor_name LIKE '%$search%' ORDER BY tutor_id";
 $result = $conn->query($sqltutor);
 $number_of_result = $result->num_rows;
 $number_of_page = ceil($number_of_result / $results_per_page);
