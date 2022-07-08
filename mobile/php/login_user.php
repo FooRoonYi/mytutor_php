@@ -17,6 +17,10 @@ if ($numrow > 0) {
         $user['email'] = $row['user_email'];
         $user['phoneNo'] = $row['user_phoneNo'];
         $user['address'] = $row['user_address'];
+        $user['credit'] = $row['user_credit'];
+        $user['otp'] = $row['user_otp'];
+        $user['datereg'] = $row['user_datereg'];
+        $user['cart'] = $row['user_cart'];
     }
     $response = array('status' => 'success', 'data' => $user);
     sendJsonResponse($response);
